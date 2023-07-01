@@ -5,14 +5,24 @@ import "./App.css";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import Layout from "./components/Layout";
+import PrivateRoutes from "./utils/PrivateRoutes";
 
+// Define Routes for website
 const router = createBrowserRouter([
   {
+    // https://stackoverflow.com/questions/73797206/react-6-4-0-common-header-for-all-the-router
+    // Shared Layout/Header across all pages
     element: <Layout />,
     children: [
       {
-        path: "/",
-        element: <HomePage />,
+        // All children routes are now private
+        element: <PrivateRoutes />,
+        children: [
+          {
+            path: "/",
+            element: <HomePage />,
+          },
+        ],
       },
       {
         path: "/login",
