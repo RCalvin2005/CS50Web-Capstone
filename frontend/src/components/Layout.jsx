@@ -3,13 +3,17 @@ import { Link, Outlet } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 
 function Layout() {
-  const { user } = useContext(AuthContext);
+  const { user, logoutUser } = useContext(AuthContext);
 
   return (
     <div>
       <Link to="/">Home</Link>
       <span> | </span>
-      {user ? <span>Logout</span> : <Link to="/login">Login</Link>}
+      {user ? (
+        <span onClick={logoutUser}>Logout</span>
+      ) : (
+        <Link to="/login">Login</Link>
+      )}
 
       {user && <p>Hello {user.username}</p>}
 
