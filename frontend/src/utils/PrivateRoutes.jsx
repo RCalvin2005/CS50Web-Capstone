@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 
 function PrivateRoutes() {
   // Checks for user authentication when children routes are visited
-  let auth = { token: true };
-  return auth.token ? <Outlet /> : <Navigate to="/login" />;
+  const { user } = useContext(AuthContext);
+  return user ? <Outlet /> : <Navigate to="/login" />;
 }
 
 export default PrivateRoutes;
