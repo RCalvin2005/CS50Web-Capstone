@@ -1,23 +1,26 @@
 import React, { useContext, useState } from "react";
 import AuthContext from "../context/AuthContext";
-import {
-  Box,
-  Button,
-  Card,
-  Divider,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { EditCalendar, Visibility, VisibilityOff } from "@mui/icons-material";
+import { Box, Button, Card, Divider, Typography } from "@mui/material";
+import { EditCalendar } from "@mui/icons-material";
+import FormInput from "../components/FormInput";
 
 function LoginPage() {
   const { loginUser } = useContext(AuthContext);
-  const [showPassword, setShowPassword] = useState(false);
+  const [values, setValues] = useState({
+    username: "",
+    password: "",
+  });
+
+  const inputs = [
+    {
+      name: "username",
+      type: "text",
+    },
+    {
+      name: "password",
+      type: "password",
+    },
+  ];
 
   return (
     <Box display="flex" justifyContent="center" mt={{ xs: 12, sm: 6 }}>
@@ -48,38 +51,17 @@ function LoginPage() {
         </Typography>
 
         <form onSubmit={loginUser}>
-          <TextField
-            name="username"
-            label="Username"
-            placeholder="Enter Username"
-            variant="outlined"
-            margin="normal"
-            fullWidth
-          />
-          <FormControl variant="outlined" margin="normal" fullWidth>
-            <InputLabel htmlFor="password-input">Password</InputLabel>
-            <OutlinedInput
-              name="password"
-              id="password-input"
-              placeholder="Enter Password"
-              label="Password"
-              type={showPassword ? "text" : "password"}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => setShowPassword((show) => !show)}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                    }}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              }
+          {inputs.map((input, index) => (
+            <FormInput
+              key={`input-${index}`}
+              {...input}
+              value={values[input.name]}
+              onChange={(e) => {
+                setValues({ ...values, [e.target.name]: e.target.value });
+              }}
             />
-          </FormControl>
+          ))}
+
           <Button type="submit" variant="contained" sx={{ my: 3 }} fullWidth>
             Sign In
           </Button>
