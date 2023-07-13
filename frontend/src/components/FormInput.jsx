@@ -1,5 +1,6 @@
 import {
   FormControl,
+  FormHelperText,
   IconButton,
   InputAdornment,
   InputLabel,
@@ -12,6 +13,8 @@ import { useState } from "react";
 function FormInput(props) {
   const { type, name, ...stateProps } = props;
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(false);
+  const [helperText, setHelperText] = useState();
 
   function titleCase(text) {
     // https://stackoverflow.com/questions/7225407/convert-camelcasetext-to-title-case-text
@@ -27,6 +30,22 @@ function FormInput(props) {
     placeholder: `Enter ${titleCase(name)}`,
   };
 
+  function validate(e) {
+    const input = e.target;
+    let valid = input.checkValidity();
+
+    if ((!input.optional === true) & (input.value === "")) {
+      setError(true);
+      setHelperText(`${titleCase(input.name)} is required.`);
+    } else if (!valid) {
+      setError(true);
+      setHelperText(input.validationMessage);
+    } else {
+      setError(false);
+      setHelperText();
+    }
+  }
+
   if (type === "password") {
     return (
       <FormControl variant="outlined" margin="normal" fullWidth>
@@ -35,6 +54,8 @@ function FormInput(props) {
           {...inputProps}
           {...stateProps}
           type={showPassword ? "text" : "password"}
+          onBlur={validate}
+          error={error}
           endAdornment={
             <InputAdornment position="end">
               <IconButton
@@ -50,6 +71,7 @@ function FormInput(props) {
             </InputAdornment>
           }
         />
+        <FormHelperText error={error}>{helperText}</FormHelperText>
       </FormControl>
     );
   }
@@ -59,6 +81,9 @@ function FormInput(props) {
       {...inputProps}
       {...stateProps}
       type={type}
+      onBlur={validate}
+      error={error}
+      helperText={helperText}
       variant="outlined"
       margin="normal"
       fullWidth
